@@ -7,7 +7,7 @@ Weston Jensen
 ####Introduction
 --
 
-The desired outcome is a remote control car that can be driven with a smartphone, using a Bluetooth connection. In order to do so, software that enables the Bluetooth module will be loaded onto the microcontroller, along with software that will allow the RC car to be both steered and driven. 
+The desired outcome is a remote control car that can be driven with an iOS phone using a Bluetooth connection. In order to do so, software that enables the Bluetooth module will be loaded onto the microcontroller, along with software that will allow the RC car to be both steered and driven. 
 
 ####Hardware
 --
@@ -23,7 +23,7 @@ The desired outcome is a remote control car that can be driven with a smartphone
 
 * The software on the microcontroller will need to receive input from the Bluetooth module and output the data to drive the car. The Bluetooth module is very similar to UART modules that we have used in past labs. 
 * An simple app must be built for the phone and transmits the data through Bluetooth to steer the car, brake, and accelerate. 
-* A signal will need to be sent to the motor drivers to control whatever motors are on the car
+* A signal will need to be sent to the motor drivers to control whatever motors are on the car.
 
 ####Estimated Cost
 --
@@ -34,4 +34,8 @@ The desired outcome is a remote control car that can be driven with a smartphone
 
 ####Challenges
 --
+
+* Hacking the RC car to connect to the microcontroller, instead of the remote control.
+* Writing a PWM protocol for the microcontroller to control the motors on the car.
+* Connecting the phone to the bluetooth module to enable the remote connection.
 
