@@ -11,6 +11,7 @@
 \usepackage[margin=0.5in]{geometry}
 \usepackage{listings}
 \usepackage{enumerate}
+\usepackage{float}
 
 
 \begin{document}
@@ -30,18 +31,20 @@ December 2015\\
 
 
 \tableofcontents
+\listoffigures
+\listoftables
 \newpage
 
 \section{Design Documentation}
 
- 
+\
 
 \section{Introduction}
 
 This document describes the design and process of changing a remote control car into a Bluetooth controlled racer. A simple App was developed so that the movement of a smartphone controls the acceleration and steering of the car. The object is to enable the car to turn left and right, and move forward and backward, all controlled by the Bluetooth connection to the phone.\\
 
 \section{Scope}
-This document discusses, in detail, the electrical and software design for the Bluetooth Racer. It includes the requirements, dependencies and theory of operation. Schematics and code segments are used to give a more thorough explanation of the design. Testing procedures and results of each requirement are included. The complete code is located in Appendix B.\\
+This document discusses, in detail, the electrical and software design for the Bluetooth Racer. It includes the requirements, dependencies and theory of operation. Schematics and code segments are used to give a more thorough explanation of the design. Testing procedures and results of each requirement are included. The complete code is located in Appendix A.\\
 
 \section{Design Overview}
 \subsection{Requirements}
@@ -60,42 +63,54 @@ The following are the given requirements for Bluetooth Racer:\\
 
 
 \subsection{Materials}
-The following are dependencies for the Bluetooth Racer:\\
-\begin{enumerate}
-\item An RC car with working motors for both steering and driving.
-\item A 9 volt DC power supply
-\item A 5 volt DC power supply with USB connection
-\item Dual TB6612FNG Motor Driver
-\item Tiva C Series TM4C123GH6PM microcontroller
-\item Bluetooth 4.0 Module
-\item Schmidt Trigger
-\item 5 LEDs
-\item Spray Paint
-\item NPN Transistor
-\item Assorted resistors and capacitors
-\end{enumerate}
+The following are dependencies for the Bluetooth Racer:
+\begin{table}[H]
+\centering
+\caption{Material List}
+\begin{tabular}{ll}\\
+\hline
+Item                                                        & Price     \\ \hline
+An RC car with working motors for both steering and driving & Free      \\ \hline
+9 volt DC power supply                                      & \$2.20    \\ \hline
+5 volt DC power supply with USB connection                  & Free      \\ \hline
+Dual TB6612FNG Motor Driver                                 & \$8.95    \\ \hline
+Tiva C Series TM4C123GH6PM microcontroller                  & \$14.00   \\ \hline
+Bluetooth 4.0 Module                                        & \$13.95   \\ \hline
+Schmidt Trigger                                             & \$0.40    \\ \hline
+5 LEDs                                                      & \$0.20 ea \\ \hline
+Spray Paint                                                 & \$1.00    \\ \hline
+NPN Transistor                                              & \$0.25    \\ \hline
+Assorted resistors and capacitors                           & \$1.00    \\ \hline
+\end{tabular}\\
+\end{table}
+
+
 
 \section{Testing}
 As specified before, the car is controlled via Bluetooth. The iOS app sends a 1 byte command that the UART module on the micro-controller receives. This byte of data contains the information necessary to enable the two H-bridges and the data to set the variable speed for PWM. The byte of data is represented in the following format: two bits for H-bridge drive followed by two bits to set the variable speed, these four bits are followed by two bits for H-bridge turn followed by two bits to set the variable speed\\
 
+\begin{figure}[H]
 \begin {center}
-\includegraphics[scale=.75]{uart-message}
-\\
-Figure 1	
+\includegraphics[scale=.75]{uart-message}\\
+\caption{UART Data Message}
 \end {center}
+\end{figure}
 
 
+\begin{figure}[H]
+\begin {center}
+\includegraphics[scale=.75]{half-power}\\
+\caption{Half Power PWM}
+\end {center}
+\end{figure}
 
+
+\begin{figure}[H]
 \begin {center}
-\includegraphics[scale=.75]{half-power}
-\\
-Figure 2
+\includegraphics[scale=.75]{quarter-power}\\
+\caption{Quarter Power PWM}
 \end {center}
-\begin {center}
-\includegraphics[scale=.75]{quarter-power}
-\\
-Figure 3
-\end {center}
+\end{figure}
 
 
 \newpage
