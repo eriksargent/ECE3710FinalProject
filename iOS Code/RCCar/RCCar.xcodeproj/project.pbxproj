@@ -492,6 +492,7 @@
 				BF5C68621C0807780044CD11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BF5C68631C0807780044CD11 /* Build configuration list for PBXNativeTarget "RCCarTests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +501,7 @@
 				BF5C68651C0807780044CD11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BF5C68661C0807780044CD11 /* Build configuration list for PBXNativeTarget "RCCarUITests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +510,7 @@
 				BF5C68681C0807780044CD11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

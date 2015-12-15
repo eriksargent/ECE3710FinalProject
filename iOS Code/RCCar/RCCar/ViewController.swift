@@ -13,7 +13,7 @@ import CoreMotion
 class ViewController: UIViewController {
     //MARK: - Properties
     var centralManager: CBCentralManager!
-    var carPeripheral: CBPeripheral!
+    var carPeripheral: CBPeripheral?
     
     var motionManager = CMMotionManager()
     
@@ -42,11 +42,44 @@ class ViewController: UIViewController {
             let drive = atan2(data.gravity.x, data.gravity.z) - M_PI / 2
             self.label.transform = CGAffineTransformMakeRotation(CGFloat(steer))
             
-            var transmitData = "t\(String(format: "%+.2f", steer))d\(String(format: "%+.2f", drive))\n".unicodeScalars.map { UInt8($0.value) }
-            let dataBytes = NSData(bytes: &transmitData, length: sizeof(UInt8) * transmitData.count)
+            // | Turn Power | Turn H-Bridge | Drive Power | Drive H-Bridge |
             
-            if let characteristic = self.carPeripheral.services?.first?.characteristics?.first {
-                self.carPeripheral.writeValue(dataBytes, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
+            var transmitData: UInt8 = 0;
+            
+            let steerParam = 0.2
+            let driveParam = 0.2
+            
+            transmitData |= min(UInt8(abs(drive) * 3), 3)
+            
+            transmitData = transmitData << 2
+            
+            if drive > -driveParam && drive < driveParam {
+                transmitData |= 0x3
+            } else if drive > driveParam {
+                transmitData |= 0x2
+            } else {
+                transmitData |= 0x1
+            }
+            
+            transmitData = transmitData << 2
+            
+            transmitData |= min(UInt8(abs(steer) * 3), 3)
+            
+            transmitData = transmitData << 2
+            
+            if steer > -steerParam && steer < steerParam {
+                transmitData |= 0x3
+            } else if steer > steerParam {
+                transmitData |= 0x2
+            } else {
+                transmitData |= 0x1
+            }
+            
+            let dataBytes = NSData(bytes: &transmitData, length: sizeof(UInt8))
+            print(String(transmitData, radix: 2))
+            
+            if let characteristic = self.carPeripheral?.services?.first?.characteristics?.first {
+                self.carPeripheral?.writeValue(dataBytes, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
             }
         }
     }
@@ -79,7 +112,7 @@ extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
             centralManager.stopScan()
             // Set as the peripheral to use and establish connection
             carPeripheral = peripheral
-            carPeripheral.delegate = self
+            carPeripheral?.delegate = self
             centralManager.connectPeripheral(peripheral, options: nil)
         }
         else {
@@ -122,7 +155,7 @@ extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
 //            let enablyBytes = NSData(bytes: &enableValue, length: sizeof(UInt8))
 //            
 //            carPeripheral.writeValue(enablyBytes, forCharacteristic: characteristic, type: .WithoutResponse)
-            carPeripheral.setNotifyValue(true, forCharacteristic: characteristic)
+            carPeripheral?.setNotifyValue(true, forCharacteristic: characteristic)
         }
     }
     
