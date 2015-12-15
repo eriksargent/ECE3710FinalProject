@@ -46,7 +46,7 @@ void UART2_INIT() {
 	//we can turn off tx if we can somehow link the phone
 	//and bluetooth without needing to tx
 	//INTERRUPT INIT for UART
-	UART2_IFLS_R = 0x0;  //set interrupts rx 1/8 full queue 319************************************************************************************?
+	UART2_IFLS_R = 0x0;  //set interrupts rx 1/8 full queue 
 	UART2_RIS_R = 0x10; //page 925
 	UART2_IM_R  = 0x10; //interrupt mask, Rxim page 921
 	UART2_NVIC_R = 0x2;
