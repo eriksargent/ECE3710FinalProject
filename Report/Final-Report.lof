@@ -1,4 +1,8 @@
 \select@language {english}
-\contentsline {figure}{\numberline {1}{\ignorespaces UART Data Message}}{3}
-\contentsline {figure}{\numberline {2}{\ignorespaces Half Power PWM}}{4}
-\contentsline {figure}{\numberline {3}{\ignorespaces Quarter Power PWM}}{4}
+\contentsline {figure}{\numberline {1}{\ignorespaces Bluetooth Module}}{4}
+\contentsline {figure}{\numberline {2}{\ignorespaces Breadboard}}{5}
+\contentsline {figure}{\numberline {3}{\ignorespaces Under the Hood}}{6}
+\contentsline {figure}{\numberline {4}{\ignorespaces Steering Controller}}{6}
+\contentsline {figure}{\numberline {5}{\ignorespaces UART Data Message}}{7}
+\contentsline {figure}{\numberline {6}{\ignorespaces Half Power PWM}}{8}
+\contentsline {figure}{\numberline {7}{\ignorespaces Quarter Power PWM}}{8}
