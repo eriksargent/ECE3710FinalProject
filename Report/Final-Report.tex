@@ -1,5 +1,5 @@
 \documentclass[12pt]{article}
-\usepackage[utf8]{inputenc}
+% \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -10,6 +10,7 @@
 \renewcommand{\indent}{\hspace*{\tindent}}
 \usepackage[margin=0.5in]{geometry}
 \usepackage{listings}
+\usepackage{color}
 \usepackage{enumerate}
 \usepackage{float}
 
@@ -161,6 +162,22 @@ In conclusion our Bluetooth racing car meet all of our specified requirements of
 \newpage
 \section{Apendix A}
 \subsection{Main.c}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color
+  basicstyle=\footnotesize,        % size of fonts used for the code
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},       % keyword style
+  stringstyle=\color{mymauve},     % string literal style
+}
+
 \lstinputlisting[language=C]{main.c}
 
 \subsection{GPIO.h}
@@ -169,5 +186,5 @@ $http://users.ece.utexas.edu/~valvano/arm/$\\
 
 
 \subsection{iOS Code}
-Ill let Erik put the code here...
+\lstinputlisting[language=c]{ViewController.swift}
 \end{document}
