@@ -12,11 +12,15 @@
 \usepackage{listings}
 \usepackage{enumerate}
 \usepackage{float}
-
+\usepackage{hyperref}
 
 \begin{document}
 
+
+
 \begin{titlepage}
+\topskip0pt
+\vspace*{\fill}
 \begin {center}
 \Huge Bluetooth Racer\\
 
@@ -26,6 +30,7 @@
 \Large David Christensen\\
 December 2015\\
 \end {center}
+\vspace*{\fill}
 
 \end{titlepage}
 
@@ -48,22 +53,24 @@ This document discusses, in detail, the electrical and software design for the B
 
 \section{Design Overview}
 \subsection{Requirements}
-The following are the given requirements for Bluetooth Racer:\\
-1. The system shall use the Tiva C Series TM4C123GH6PM microcontroller.\\
-2. The system shall use two external batteries. A 5 volt battery with USB connection to the microcontroller and a 9 volt DC supply for the drive and steering.\\
-3. The system shall use a Bluetooth 4.0 Module.\\
-4. The system shall use a Dual TB6612FNG Motor Driver (H-Bridge).\\
-5. The Racer shall have PWM output to controller variable motor speed.\\
-6. Working LED’s should be used for the front and tail lights, as well as an inside light.\\
-7. Upon powering up, the inside light should be turned on. \\
-8. Upon connecting to Bluetooth, the front and tail lights should turn on. \\
-9. The microcontroller will transmit and receive data from the Bluetooth module through UART.\\
-10. The user shall command the Racer with a smartphone over Bluetooth connection. The movement of the phone will control the direction in which the car will move.\\
-11. The Racer shall be able to turn and drive forward and backward on command of the user.\\
+The following are the given requirements for Bluetooth Racer:
+\begin{itemize}
+\item The system shall use the Tiva C Series TM4C123GH6PM microcontroller.
+\item The system shall use two external batteries. A 5 volt battery with USB connection to the microcontroller and a 9 volt DC \item supply for the drive and steering.
+\item The system shall use a Bluetooth 4.0 Module.
+\item The system shall use a Dual TB6612FNG Motor Driver (H-Bridge).
+\item The Racer shall have PWM output to controller variable motor speed.
+\item Working LED’s should be used for the front and tail lights, as well as an inside light.
+\item Upon powering up, the inside light should be turned on. 
+\item Upon connecting to Bluetooth, the front and tail lights should turn on. 
+\item The microcontroller will transmit and receive data from the Bluetooth module through UART.
+\item The user shall command the Racer with a smartphone over Bluetooth connection. The movement of the phone will control the direction in which the car will move.
+\item The Racer shall be able to turn and drive forward and backward on command of the user.
+\end{itemize}  
 
 
 \subsection{Materials}
-The following are dependencies for the Bluetooth Racer:
+The following is a list of materials used for the Bluetooth Racer:
 \begin{table}[H]
 \centering
 \caption{Material List}
@@ -156,7 +163,7 @@ The RC car is designed to drive and different speeds, using PWM we are able to e
 The RC car can also travel at slower speeds as when it is first starting to accelerate. Above is a screen shot from the logic analyzer, the wave form is high for close to quarter of the entire wave, this means the car is driving half as fast compared to the half-power wave form.\\
 
 \section{Conclusion}
-In conclusion our Bluetooth racing car meet all of our specified requirements of being able to drive forward/backward and be able to steer left and right all the time being controlled by a smartphone app. As we progressed on the project we had numerous ideas that we would of been able to implement if we had a larger time frame to do so. The biggest restriction we confronted was associated with getting enough power to run our car at 100\% capacity. The RC car we used to implemented the Bluetooth Racer was a used car that had seen better days, and unfortunately the 9V batter that came with the car was depleted and our efforts to recharge it were in vain. It was exciting to see all the skills we learned in lecture and past labs come together to build the Bluetooth Racer, these skills include but are not limited to: systick timer, GPTM timer, GPIO port interrupts, PWM, UART and c logic. This project has given us the skills and confidence to find everyday devices that with the help of a micro-controller can be put to new use with exciting results.\\
+In conclusion our Bluetooth racing car met all of our specified requirements of being able to drive forward/backward and be able to steer left and right all the time being controlled by a smartphone app. As we progressed on the project we had numerous ideas that we would of been able to implement if we had a larger time frame to do so. The biggest restriction we confronted was associated with getting enough power to run our car at 100\% capacity. The RC car we used to implemented the Bluetooth Racer was a used car that had seen better days, and unfortunately the 9V batter that came with the car was depleted and our efforts to recharge it were in vain. It was exciting to see all the skills we learned in lecture and past labs come together to build the Bluetooth Racer, these skills include but are not limited to: systick timer, GPTM timer, GPIO port interrupts, PWM, UART and c logic. This project has given us the skills and confidence to find everyday devices that with the help of a micro-controller can be put to new use with exciting results.\\
 
 \newpage
 \section{Apendix A}

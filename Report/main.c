@@ -52,7 +52,7 @@ void UART2_INIT() {
 	UART2_NVIC_R = 0x2;
 }
 
-//Trigger when queue is 3/4 full(12 bytes)
+//Trigger when queue is 1/8 full
 void UART2_Handler() { 
 	TIMER1_TAILR_R = 0x7A1200;       // Reset watchdog timer value    
 	GPIO_PORTE_DATA_R = 0x0;         // Turn on headlights

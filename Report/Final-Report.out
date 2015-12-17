@@ -1,0 +1,15 @@
+\BOOKMARK [1][-]{section.1}{Design Documentation}{}% 1
+\BOOKMARK [1][-]{section.2}{Introduction}{}% 2
+\BOOKMARK [1][-]{section.3}{Scope}{}% 3
+\BOOKMARK [1][-]{section.4}{Design Overview}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Requirements}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Materials}{section.4}% 6
+\BOOKMARK [1][-]{section.5}{Bluetooth Racer Design}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Software Design}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Hardware Design}{section.5}% 9
+\BOOKMARK [1][-]{section.6}{Testing}{}% 10
+\BOOKMARK [1][-]{section.7}{Conclusion}{}% 11
+\BOOKMARK [1][-]{section.8}{Apendix A}{}% 12
+\BOOKMARK [2][-]{subsection.8.1}{Main.c}{section.8}% 13
+\BOOKMARK [2][-]{subsection.8.2}{GPIO.h}{section.8}% 14
+\BOOKMARK [2][-]{subsection.8.3}{iOS Code}{section.8}% 15
