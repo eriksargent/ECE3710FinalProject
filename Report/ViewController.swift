@@ -23,8 +23,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Setup the bluetooth manager
         centralManager = CBCentralManager(delegate: self, queue: nil)
         
+        //Add the status label to the view
         label = UILabel(frame: CGRect(x: view.frame.width / 2 - 150, y: view.frame.height / 2 - 15, width: 300, height: 30))
         label.text = "Searching for car..."
         label.textAlignment = .Center
@@ -32,12 +34,14 @@ class ViewController: UIViewController {
         
         view.addSubview(label)
         
+        //Watch motion changes
         motionManager.deviceMotionUpdateInterval = 0.1
         motionManager.startDeviceMotionUpdatesToQueue(NSOperationQueue.mainQueue()) { motionData, error in
             guard let data = motionData where error == nil else {
                 return
             }
             
+            //Calculate the angles of device rotation
             let steer = atan2(data.gravity.x, data.gravity.y) - M_PI / 2
             let drive = atan2(data.gravity.x, data.gravity.z) - M_PI / 2
             self.label.transform = CGAffineTransformMakeRotation(CGFloat(steer))
@@ -49,10 +53,12 @@ class ViewController: UIViewController {
             let steerParam = 0.2
             let driveParam = 0.2
             
+            //Add drive speed
             transmitData |= min(UInt8(abs(drive) * 3), 3)
             
             transmitData = transmitData << 2
             
+            //Add drive h-bridge command
             if drive > -driveParam && drive < driveParam {
                 transmitData |= 0x3
             } else if drive > driveParam {
@@ -63,10 +69,12 @@ class ViewController: UIViewController {
             
             transmitData = transmitData << 2
             
+            //Add turn speed
             transmitData |= min(UInt8(abs(steer) * 3), 3)
             
             transmitData = transmitData << 2
             
+            //Add turn h-bridge command
             if steer > -steerParam && steer < steerParam {
                 transmitData |= 0x3
             } else if steer > steerParam {
@@ -75,9 +83,11 @@ class ViewController: UIViewController {
                 transmitData |= 0x1
             }
             
+            //Generate byte to transmit
             let dataBytes = NSData(bytes: &transmitData, length: sizeof(UInt8))
             print(String(transmitData, radix: 2))
             
+            //Transmit byte over bluetooth
             if let characteristic = self.carPeripheral?.services?.first?.characteristics?.first {
                 self.carPeripheral?.writeValue(dataBytes, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithoutResponse)
             }
@@ -88,18 +98,19 @@ class ViewController: UIViewController {
 
 //MARK: - CoreMotion
 extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
+    //Start searching for bluetooth devices
     func centralManagerDidUpdateState(central: CBCentralManager) {
         if central.state == CBCentralManagerState.PoweredOn {
             // Scan for peripherals if BLE is turned on
             central.scanForPeripheralsWithServices(nil, options: nil)
-            print("Searching")
+            print("Searching for device")
         }
         else {
-            // Can have different conditions for all states if needed - print generic message for now
             print("BLuetooth not initialized")
         }
     }
     
+    //Found a device
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String: AnyObject], RSSI: NSNumber) {
         let deviceName = "RCCAR1"
         let nameOfDeviceFound = (advertisementData as NSDictionary).objectForKey(CBAdvertisementDataLocalNameKey) as? NSString
@@ -120,23 +131,26 @@ extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
+    //Connect to bluetooth device
     func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         print("I found it! Now discover services")
         peripheral.discoverServices(nil)
     }
     
+    //Discover services on bluetooth device
     func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
         guard let services = peripheral.services where error == nil else {
             return
         }
         
-        print("Periferal services: \(services.map { $0.UUID })")
+        print("Peripheral services: \(services.map { $0.UUID })")
         
         for service in services {
             peripheral.discoverCharacteristics(nil, forService: service)
         }
     }
     
+    //Discover characteristics for device
     func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
         print("enabling peripheral")
 
@@ -144,21 +158,20 @@ extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
             return
         }
         
+        //Change status label
         NSOperationQueue.mainQueue().addOperationWithBlock {
             self.label.text = "Connected to car"
         }
         
         print("Characteristics: \(characteristics.map { $0.UUID })")
         
+        //Start data notifications for device
         for characteristic in characteristics {
-//            var enableValue = 65 as UInt8
-//            let enablyBytes = NSData(bytes: &enableValue, length: sizeof(UInt8))
-//            
-//            carPeripheral.writeValue(enablyBytes, forCharacteristic: characteristic, type: .WithoutResponse)
             carPeripheral?.setNotifyValue(true, forCharacteristic: characteristic)
         }
     }
     
+    //Device characteristics changed
     func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         guard let dataBytes = characteristic.value else {
             return
@@ -172,17 +185,10 @@ extension ViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
         print(String(bytes: dataArray, encoding: NSASCIIStringEncoding))
     }
     
+    //Lost device
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         label.text = "Searching for car..."
         print("Car disconnected")
         central.scanForPeripheralsWithServices(nil, options: nil)
-    }
-    
-    func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        print(error)
-    }
-    
-    func peripheral(peripheral: CBPeripheral, didUpdateNotificationStateForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        print(characteristic.properties)
     }
 }
