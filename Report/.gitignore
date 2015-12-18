@@ -4,3 +4,6 @@
 *.toc
 *.*latex*
 *fls
+*.out
+*.lof
+*.lot

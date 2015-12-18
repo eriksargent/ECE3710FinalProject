@@ -55,13 +55,9 @@ December 2015\\
 \listoftables
 \newpage
 
-\section{Design Documentation}
-
-\
-
 \section{Introduction}
 
-This document describes the design and process of changing a remote control car into a Bluetooth controlled racer. A simple App was developed so that the movement of a smartphone controls the acceleration and steering of the car. The object is to enable the car to turn left and right, and move forward and backward, all controlled by the Bluetooth connection to the phone. Included in this document, the software and hardware design are discussed and portrayed with diagrams. In order to prove that the Bluetooth controlled car works the way it is supposed to, test documentation is included, as well as a video link of the car working. The challenges associated with this lab, include: working with new hardware i.e. Bluetooth Module, Motor Driver, Schmidt Trigger and an RC car with no accompanying data sheet for the motors.\\
+This document describes the design and process of retrofitting a remote control car into a Bluetooth controlled racer. A simple App was developed so that the movement of a smartphone controls the acceleration and steering of the car. The object is to enable the car to turn left and right, and move forward and backward, all controlled by the Bluetooth connection to the phone. Included in this document, the software and hardware design are discussed and portrayed with diagrams. In order to prove that the Bluetooth controlled car works the way it is supposed to, test documentation is included, as well as a video link of the car working. The challenges associated with this lab, include: working with new hardware i.e. Bluetooth Module, Motor Driver, Schmidt Trigger and an RC car with no accompanying data sheet for the motors.\\
 
 \section{Scope}
 This document discusses, in detail, the electrical and software design for the Bluetooth Racer. It includes the requirements, dependencies and theory of operation. Schematics and code segments are used to give a more thorough explanation of the design. Testing procedures and results of each requirement are included. The complete code is located in Appendix A.\\
@@ -71,7 +67,7 @@ This document discusses, in detail, the electrical and software design for the B
 The following are the given requirements for Bluetooth Racer:
 \begin{itemize}
 \item The system shall use the Tiva C Series TM4C123GH6PM microcontroller.
-\item The system shall use two external batteries. A 5 volt battery with USB connection to the microcontroller and a 9 volt DC \item supply for the drive and steering.
+\item The system shall use two external batteries. A 5 volt battery with USB connection to the microcontroller and a 9 volt DC supply for the drive and steering.
 \item The system shall use a Bluetooth 4.0 Module.
 \item The system shall use a Dual TB6612FNG Motor Driver (H-Bridge).
 \item The Racer shall have PWM output to controller variable motor speed.
@@ -116,17 +112,24 @@ We begin with the UART's initialization, the Bluetooth module by default transmi
 We will now discuss the interrupt handler functions with their associated logic. When the UART buffer is 1/8 full the UART interrupt is triggered. Inside of the UART handler GPTM timer 1A is reloaded with a .5 second delay, this is done so the only time the watchdog timer expires is when we have not received data from the smartphone for .5 second. This is followed by reading in the data received from the Bluetooth module. As mentioned before we actually receive two bytes of data but only need the lower 8 bits so the upper 8 are discarded. The byte of data is then parsed into 2 bit parts. The first 2 bits are to enable H-bridge1 which is followed by the 2 bits to determine the PWM frequency. The next 4 bits follow the same format but are for H-bridge2 and its associated PWM frequency. GPIO port A is responsible for receiving feedback from the steering module, if an interrupt is triggered on this port it is determined if we have steered all the way left or right. Once determined we set either the variable "turningRight"=0 or "turningLeft" =0. After parsing the data in the UART handler continues by checking the variables "turningRight" and "turningLeft" and if they are equal to 1 and if H-bridge1 is enabled we send a command to turn the desired direction. Finally we write the desired PWM value to the variable PWM0Duty and PWM1Duty which are used in the systick handler. When the systick handler interrupt is triggered we begin by incrementing two count values that represent PWM0 and PWM1, if the count is greater than 100 we reset the value back to 0. Next the PWM duty cycles are updated and we exit the function. This process is continued until the user terminates transmission and the car then shuts down.  
 
 \subsection{Hardware Design}
+
 \begin{figure}[H]
 \begin {center}
 \includegraphics[scale=.10]{bluetooth}\\
 \caption{Bluetooth Module}
+\label{fig:bluetooth}
 \end {center}
 \end{figure}
+
+The heart of the hardware design is the bluetooth module. The bluetooth module is connected to 5V from the microcontroller and ground. The TX and RX from the bluetooth module are connected to the microcontroller's UART RX and TX inputs. The bluetooth module can been seen in Figure \ref{fig:bluetooth}. Along side the bluetooth module is a dual H-Bridge motor driver from Sparkfun. The motor driver can be configured to drive the motors forward, backwards or stop. Each driver also has a PWM input to change the voltage that is output to the motor, thereby changing the speed. The microcontroller has two GPIO ports connected to each h-bridge line for 2-bit configuration of each, and an additional line per driver connected to the PWM input on the motor driver. The motors were each connected to their respective connections on the other side of the motor driver. 
+
+
 
 \begin{figure}[H]
 \begin {center}
 \includegraphics[scale=.10]{car-breadboard}\\
 \caption{Breadboard}
+\label{fig:breadboard}
 \end {center}
 \end{figure}
 
@@ -134,6 +137,7 @@ We will now discuss the interrupt handler functions with their associated logic.
 \begin {center}
 \includegraphics[scale=.10]{car-guts}\\
 \caption{Under the Hood}
+\label{fig:hood}
 \end {center}
 \end{figure}
 
@@ -141,6 +145,7 @@ We will now discuss the interrupt handler functions with their associated logic.
 \begin {center}
 \includegraphics[scale=.10]{encoder}\\
 \caption{Steering Controller}
+\label{fig:steering}
 \end {center}
 \end{figure}
 
