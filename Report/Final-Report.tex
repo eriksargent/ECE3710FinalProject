@@ -111,6 +111,14 @@ We begin with the UART's initialization, the Bluetooth module by default transmi
 
 We will now discuss the interrupt handler functions with their associated logic. When the UART buffer is 1/8 full the UART interrupt is triggered. Inside of the UART handler GPTM timer 1A is reloaded with a .5 second delay, this is done so the only time the watchdog timer expires is when we have not received data from the smartphone for .5 second. This is followed by reading in the data received from the Bluetooth module. As mentioned before we actually receive two bytes of data but only need the lower 8 bits so the upper 8 are discarded. The byte of data is then parsed into 2 bit parts. The first 2 bits are to enable H-bridge1 which is followed by the 2 bits to determine the PWM frequency. The next 4 bits follow the same format but are for H-bridge2 and its associated PWM frequency. GPIO port A is responsible for receiving feedback from the steering module, if an interrupt is triggered on this port it is determined if we have steered all the way left or right. Once determined we set either the variable "turningRight"=0 or "turningLeft" =0. After parsing the data in the UART handler continues by checking the variables "turningRight" and "turningLeft" and if they are equal to 1 and if H-bridge1 is enabled we send a command to turn the desired direction. Finally we write the desired PWM value to the variable PWM0Duty and PWM1Duty which are used in the systick handler. When the systick handler interrupt is triggered we begin by incrementing two count values that represent PWM0 and PWM1, if the count is greater than 100 we reset the value back to 0. Next the PWM duty cycles are updated and we exit the function. This process is continued until the user terminates transmission and the car then shuts down.  
 
+\begin{figure}[H]
+\begin {center}
+\includegraphics[scale=0.5]{Software}\\
+\caption{Software Flowchart}
+\label{fig:software}
+\end {center}
+\end{figure}
+
 \subsection{Hardware Design}
 
 \begin{figure}[H]
@@ -121,9 +129,13 @@ We will now discuss the interrupt handler functions with their associated logic.
 \end {center}
 \end{figure}
 
-The heart of the hardware design is the bluetooth module. The bluetooth module is connected to 5V from the microcontroller and ground. The TX and RX from the bluetooth module are connected to the microcontroller's UART RX and TX inputs. The bluetooth module can been seen in Figure \ref{fig:bluetooth}. Along side the bluetooth module is a dual H-Bridge motor driver from Sparkfun. The motor driver can be configured to drive the motors forward, backwards or stop. Each driver also has a PWM input to change the voltage that is output to the motor, thereby changing the speed. The microcontroller has two GPIO ports connected to each h-bridge line for 2-bit configuration of each, and an additional line per driver connected to the PWM input on the motor driver. The motors were each connected to their respective connections on the other side of the motor driver. 
+The heart of the hardware design is the bluetooth module. The bluetooth module is connected to 5V from the microcontroller and ground. The TX and RX from the bluetooth module are connected to the microcontroller's UART RX and TX inputs. The bluetooth module can been seen in Figure \ref{fig:bluetooth}. Along side the bluetooth module is a dual H-Bridge motor driver from Sparkfun. The motor driver can be configured to drive the motors forward, backwards or stop. Each driver also has a PWM input to change the voltage that is output to the motor, thereby changing the speed. The microcontroller has two GPIO ports connected to each h-bridge line for 2-bit configuration of each, and an additional line per driver connected to the PWM input on the motor driver. The motors were each connected to their respective connections on the other side of the motor driver. \\
 
+The steering motor has two hardware switches to provide feedback when the motor is turned all the way to one side. This switch can be seen in Figure \ref{fig:steering} as the green board connected to the end of the motor shaft. These switches were originally connected directly to the microcontroller, but it was found to have a lot of noise as the motor turned which would trigger unnecessary interrupts in the software. To remmedy this, a hardware RC filter was added to smooth out the noise, and a schmitt trigger was added in line to add hysteresis to the signal. This filtered signal is then connected to the microcontroller, and provides much cleaner signal. The motor controller (red) and the schmitt trigger with filter are shown in Figure \ref{fig:breadboard}. \\
 
+The seats were removed from the top of the car to make room for the electronics to fit in the car. The breadboard with electronics, microcontroller, and batterys were strapped to the top of the frame, then the shell of the car was placed on top. The top was left easy to remove to facilitate easy maintenance. The electronics on the car are shown in Figure \ref{fig:hood}. A series of LEDs were connected to a transistor to supply power that was switched by a GPIO port on the microcontroller. These LEDs were used to display when the car was connected to the phone and were glued into the head and break lights. \\
+
+The full hardware schematic is shown below in Figure \ref{fig:hardware}.
 
 \begin{figure}[H]
 \begin {center}
@@ -146,6 +158,14 @@ The heart of the hardware design is the bluetooth module. The bluetooth module i
 \includegraphics[scale=.10]{encoder}\\
 \caption{Steering Controller}
 \label{fig:steering}
+\end {center}
+\end{figure}
+
+\begin{figure}[H]
+\begin {center}
+\includegraphics[scale=0.5]{Schematic}\\
+\caption{Hardware Schematic}
+\label{fig:hardware}
 \end {center}
 \end{figure}
 
@@ -187,13 +207,15 @@ In conclusion our Bluetooth racing car met all of our specified requirements of 
 
 \newpage
 \section{Apendix A}
+
+All code projects can be found on Github here: \url{https://github.com/eriksargent/ECE3710FinalProject}
+
 \subsection{Main.c}
 \lstinputlisting[language=C]{main.c}
 
 \subsection{GPIO.h}
 This is a file provided by Valvano, please see link for GPIO.h file.\\
 $http://users.ece.utexas.edu/~valvano/arm/$\\
-
 
 \subsection{iOS Code}
 \lstinputlisting[language=C]{ViewController.swift}
