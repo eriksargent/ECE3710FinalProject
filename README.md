@@ -8,5 +8,5 @@ Erik Sargent
 
 [Project Proposal](Proposal/Proposal.pdf)  
 [Final Report](Report/Final-Report.pdf)  
-[iOS Project Code](iOS\ Code)  
+[iOS Project Code](iOS\ Code/RCCar)  
 [Microcontroller Code](uC\ Code)  
